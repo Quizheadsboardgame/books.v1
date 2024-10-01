@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif; /* Standard font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
+            text-align: center;
+        }
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
+        #next-button {
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="George Michael Logo">
+    <h1>BOOKS</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
+
+<script>
+    // Question and answers data
+    const quizData = [
+      { question: 'What is the title of the book written by George Orwell that depicts a dystopian future?', answer: '1984' },
+        { question: 'Who is the author of the Harry Potter series?', answer: 'J.K. Rowling' },
+        { question: 'What is the main theme of "To Kill a Mockingbird"?', answer: 'Racial Injustice' },
+        { question: 'Which novel begins with the line "Call me Ishmael"?', answer: 'Moby-Dick' },
+        { question: 'What is the name of the fictional wizarding school in the Harry Potter series?', answer: 'Hogwarts' },
+        { question: 'In which book does the character Jay Gatsby appear?', answer: 'The Great Gatsby' },
+        { question: 'Who wrote the play "Romeo and Juliet"?', answer: 'William Shakespeare' },
+        { question: 'What is the name of the hobbit who is the main character in "The Lord of the Rings"?', answer: 'Frodo Baggins' },
+        { question: 'Which author created the character Sherlock Holmes?', answer: 'Arthur Conan Doyle' },
+        { question: 'What is the name of the dystopian novel by Aldous Huxley?', answer: 'Brave New World' },
+        { question: 'Which classic novel features the character Atticus Finch?', answer: 'To Kill a Mockingbird' },
+        { question: 'Who wrote "Pride and Prejudice"?', answer: 'Jane Austen' },
+        { question: 'What is the name of the main character in "The Catcher in the Rye"?', answer: 'Holden Caulfield' },
+        { question: 'In "The Chronicles of Narnia", what is the name of the lion?', answer: 'Aslan' },
+        { question: 'What is the title of the first book in the "A Song of Ice and Fire" series?', answer: 'A Game of Thrones' },
+        { question: 'Who wrote "The Picture of Dorian Gray"?', answer: 'Oscar Wilde' },
+        { question: 'Which book tells the story of a young girl named Scout Finch?', answer: 'To Kill a Mockingbird' },
+        { question: 'What is the title of the first book in the Harry Potter series?', answer: 'Harry Potter and the Sorcerer\'s Stone' },
+        { question: 'Who wrote "The Hobbit"?', answer: 'J.R.R. Tolkien' },
+        { question: 'What is the name of the famous detective in Agatha Christie\'s novels?', answer: 'Hercule Poirot' },
+        { question: 'What is the name of the protagonist in "The Alchemist"?', answer: 'Santiago' },
+        { question: 'Who is the author of "The Fault in Our Stars"?', answer: 'John Green' },
+        { question: 'In which book do the characters Katniss Everdeen and Peeta Mellark compete in a deadly competition?', answer: 'The Hunger Games' },
+        { question: 'What is the main setting of "The Great Gatsby"?', answer: 'Long Island' },
+        { question: 'Which novel features a whale named Moby Dick?', answer: 'Moby-Dick' },
+        { question: 'Who wrote "Wuthering Heights"?', answer: 'Emily Brontë' },
+        { question: 'What is the title of the book about a young orphan girl named Anne?', answer: 'Anne of Green Gables' },
+        { question: 'In "The Lord of the Flies", what do the boys use to start a fire?', answer: 'Glasses' },
+        { question: 'Who is the author of "The Road"?', answer: 'Cormac McCarthy' },
+        { question: 'What is the name of the vampire in "Dracula"?', answer: 'Count Dracula' },
+        { question: 'Who wrote "The Grapes of Wrath"?', answer: 'John Steinbeck' },
+        { question: 'What is the title of the classic book by F. Scott Fitzgerald about the Jazz Age?', answer: 'The Great Gatsby' },
+        { question: 'In "The Adventures of Tom Sawyer", who is Tom\'s best friend?', answer: 'Huckleberry Finn' },
+        { question: 'What is the title of the first book in the "Percy Jackson & the Olympians" series?', answer: 'The Lightning Thief' },
+        { question: 'Who is the author of "Little Women"?', answer: 'Louisa May Alcott' },
+        { question: 'In "1984", what is the name of the totalitarian regime?', answer: 'The Party' },
+        { question: 'What is the name of the main character in "Brave New World"?', answer: 'Bernard Marx' },
+        { question: 'Who wrote "The Handmaid\'s Tale"?', answer: 'Margaret Atwood' },
+        { question: 'What is the name of the young girl in "The Secret Garden"?', answer: 'Mary Lennox' },
+        { question: 'Who is the author of the book "The Kite Runner"?', answer: 'Khaled Hosseini' },
+        { question: 'In "The Hitchhiker\'s Guide to the Galaxy", what is the answer to the ultimate question of life, the universe, and everything?', answer: '42' },
+        { question: 'What is the title of the book by George R.R. Martin that inspired the TV show "Game of Thrones"?', answer: 'A Game of Thrones' },
+        { question: 'Who is the author of "The Old Man and the Sea"?', answer: 'Ernest Hemingway' },
+        { question: 'In "The Fault in Our Stars", what illness does Hazel Grace Lancaster have?', answer: 'Thyroid cancer' },
+        { question: 'What is the name of the magical land in "The Lion, the Witch and the Wardrobe"?', answer: 'Narnia' },
+        { question: 'Who wrote "The Metamorphosis"?', answer: 'Franz Kafka' },
+        { question: 'What is the name of the character who travels to Oz in "The Wonderful Wizard of Oz"?', answer: 'Dorothy' },
+        { question: 'Who wrote "A Tale of Two Cities"?', answer: 'Charles Dickens' },
+        { question: 'In "Charlotte\'s Web", what type of animal is Wilbur?', answer: 'Pig' },
+        { question: 'Who is the author of "The Hitchhiker\'s Guide to the Galaxy"?', answer: 'Douglas Adams' },
+        { question: 'What is the name of the protagonist in "The Great Gatsby"?', answer: 'Jay Gatsby' },
+        { question: 'What is the title of the book that features the character Gregor Samsa?', answer: 'The Metamorphosis' },
+        { question: 'Who wrote "The Shining"?', answer: 'Stephen King' },
+        { question: 'In "The Chronicles of Narnia", who is the White Witch?', answer: 'The main antagonist' },
+        { question: 'What is the name of the book series featuring a boy wizard?', answer: 'Harry Potter' },
+        { question: 'Who is the author of "A Wrinkle in Time"?', answer: 'Madeleine L\'Engle' },
+        { question: 'In "The Perks of Being a Wallflower", what is the main character\'s name?', answer: 'Charlie' },
+        { question: 'What is the title of the first book in the "Hunger Games" series?', answer: 'The Hunger Games' },
+        { question: 'Who wrote "The Bell Jar"?', answer: 'Sylvia Plath' },
+        { question: 'What is the name of the main character in "The Handmaid\'s Tale"?', answer: 'Offred' },
+        { question: 'Who wrote "The Book Thief"?', answer: 'Markus Zusak' },
+        { question: 'What is the title of the book that features a talking spider named Charlotte?', answer: 'Charlotte\'s Web' },
+        { question: 'In "1984", what is the name of the protagonist?', answer: 'Winston Smith' },
+        { question: 'Who wrote "The Time Traveler\'s Wife"?', answer: 'Audrey Niffenegger' },
+        { question: 'What is the name of the bear in "Winnie-the-Pooh"?', answer: 'Winnie' },
+        { question: 'Who is the author of "The Road"?', answer: 'Cormac McCarthy' },
+        { question: 'What is the name of the main character in "The Fault in Our Stars"?', answer: 'Hazel Grace Lancaster' },
+        { question: 'Who wrote "Catch-22"?', answer: 'Joseph Heller' },
+        { question: 'What is the name of the protagonist in "The Book Thief"?', answer: 'Liesel Meminger' },
+        { question: 'In "The Great Gatsby", who is Daisy Buchanan?', answer: 'Jay Gatsby\'s love interest' },
+        { question: 'Who wrote "Animal Farm"?', answer: 'George Orwell' },
+        { question: 'What is the title of the book by J.D. Salinger featuring Holden Caulfield?', answer: 'The Catcher in the Rye' },
+        { question: 'Who is the author of "The Glass Castle"?', answer: 'Jeannette Walls' },
+        { question: 'In "Pride and Prejudice", who is Elizabeth Bennet?', answer: 'The main character' },
+        { question: 'What is the title of the classic novel by Harper Lee?', answer: 'To Kill a Mockingbird' },
+        { question: 'Who wrote "The Chronicles of Narnia" series?', answer: 'C.S. Lewis' },
+        { question: 'In "Brave New World", what is the drug used to keep people happy?', answer: 'Soma' },
+        { question: 'Who is the author of "The Lovely Bones"?', answer: 'Alice Sebold' },
+        { question: 'What is the title of the book that features the character Pip?', answer: 'Great Expectations' },
+        { question: 'Who wrote "Gone with the Wind"?', answer: 'Margaret Mitchell' },
+        { question: 'What is the name of the main character in "Fahrenheit 451"?', answer: 'Guy Montag' },
+        { question: 'Who is the author of "Life of Pi"?', answer: 'Yann Martel' },
+        { question: 'What is the title of the book that features the character Katniss Everdeen?', answer: 'The Hunger Games' },
+        { question: 'Who wrote "The Secret Life of Bees"?', answer: 'Sue Monk Kidd' },
+        { question: 'In "A Tale of Two Cities", what is the famous opening line?', answer: 'It was the best of times, it was the worst of times.' },
+        { question: 'What is the title of the book by John Green that deals with teenage love and illness?', answer: 'The Fault in Our Stars' },
+        { question: 'Who is the author of "The Great Alone"?', answer: 'Kristin Hannah' },
+        { question: 'What is the name of the main character in "A Wrinkle in Time"?', answer: 'Meg Murry' },
+        { question: 'In "The Giver", what is the main character\'s name?', answer: 'Jonas' },
+        { question: 'What is the title of the novel that features a dystopian society governed by a totalitarian regime?', answer: '1984' },
+        { question: 'Who wrote "The Immortal Life of Henrietta Lacks"?', answer: 'Rebecca Skloot' },
+        { question: 'In "The Great Gatsby", what does the green light symbolize?', answer: 'Gatsby\'s hope for the future' },
+        { question: 'What is the title of the book that features the character Winston Smith?', answer: '1984' },
+        { question: 'Who is the author of "Eleanor Oliphant Is Completely Fine"?', answer: 'Gail Honeyman' },
+        { question: 'What is the title of the book that features the character Celie?', answer: 'The Color Purple' },
+        { question: 'Who wrote "The Help"?', answer: 'Kathryn Stockett' },
+        { question: 'In "The Road", what is the main setting?', answer: 'A post-apocalyptic world' },
+        { question: 'What is the name of the character in "The Giver" who receives memories?', answer: 'Jonas' },
+        { question: 'Who wrote "Big Little Lies"?', answer: 'Liane Moriarty' },
+        { question: 'What is the title of the book that features the character Gatsby?', answer: 'The Great Gatsby' },
+        { question: 'Who is the author of "The Night Circus"?', answer: 'Erin Morgenstern' },
+        { question: 'What is the title of the book that features the character Clarisse?', answer: 'Fahrenheit 451' },
+        { question: 'Who wrote "The Kite Runner"?', answer: 'Khaled Hosseini' },
+        { question: 'In "Pride and Prejudice", who is Mr. Darcy?', answer: 'A wealthy gentleman' },
+        { question: 'What is the title of the book that tells the story of a girl named Katniss Everdeen?', answer: 'The Hunger Games' },
+        { question: 'Who is the author of "The Nightingale"?', answer: 'Kristin Hannah' },
+        { question: 'What is the name of the character who speaks to the animals in "Charlotte\'s Web"?', answer: 'Wilbur' },
+        { question: 'Who wrote "The Shadow of the Wind"?', answer: 'Carlos Ruiz Zafón' },
+        { question: 'In "The Book Thief", who is the narrator?', answer: 'Death' },
+        { question: 'What is the title of the book that features the character Liesel Meminger?', answer: 'The Book Thief' },
+        { question: 'Who is the author of "The Martian"?', answer: 'Andy Weir' },
+        { question: 'What is the name of the protagonist in "The Night Circus"?', answer: 'Celia Bowen' },
+        { question: 'In "The Fault in Our Stars", what is the name of Hazel\'s love interest?', answer: 'Augustus Waters' },
+        { question: 'Who wrote "A Man Called Ove"?', answer: 'Fredrik Backman' },
+        { question: 'What is the title of the book that features the character Offred?', answer: 'The Handmaid\'s Tale' },
+        { question: 'Who is the author of "The Alchemist"?', answer: 'Paulo Coelho' },
+        { question: 'What is the title of the book that features the character Charlie?', answer: 'The Perks of Being a Wallflower' },
+        { question: 'Who wrote "Where the Crawdads Sing"?', answer: 'Delia Owens' },
+        { question: 'What is the title of the book that features a character named Holden Caulfield?', answer: 'The Catcher in the Rye' },
+        { question: 'Who is the author of "The Goldfinch"?', answer: 'Donna Tartt' },
+        { question: 'What is the name of the character in "The Road" who is searching for food and safety?', answer: 'The Man' },
+        { question: 'Who wrote "Everything I Never Told You"?', answer: 'Celeste Ng' },
+        { question: 'What is the title of the book that features the character Daisy Buchanan?', answer: 'The Great Gatsby' },
+        { question: 'Who is the author of "The Book Thief"?', answer: 'Markus Zusak' },
+        { question: 'In "The Giver", what is the main theme?', answer: 'The importance of memory and individuality' },
+        { question: 'What is the title of the novel that features a dystopian future and a character named Jonas?', answer: 'The Giver' },
+        { question: 'Who wrote "The Hunger Games" series?', answer: 'Suzanne Collins' },
+        { question: 'What is the title of the book that tells the story of a boy named Pip?', answer: 'Great Expectations' },
+        { question: 'Who is the author of "The Immortalists"?', answer: 'Chloe Benjamin' },
+        { question: 'What is the name of the character in "The Lovely Bones" who is narrating the story?', answer: 'Susie Salmon' },
+        { question: 'Who wrote "The Curious Incident of the Dog in the Night-Time"?', answer: 'Mark Haddon' },
+        { question: 'What is the title of the book that features the character Hazel Grace Lancaster?', answer: 'The Fault in Our Stars' },
+        { question: 'Who is the author of "Little Fires Everywhere"?', answer: 'Celeste Ng' },
+        { question: 'What is the title of the book that features the character Augustus Waters?', answer: 'The Fault in Our Stars' },
+        { question: 'Who wrote "The Light We Lost"?', answer: 'Jill Santopolo' },
+        { question: 'What is the name of the character who falls in love with Gatsby?', answer: 'Daisy Buchanan' },
+        { question: 'Who is the author of "The Song of Achilles"?', answer: 'Madeline Miller' },
+        { question: 'What is the title of the novel by Chimamanda Ngozi Adichie?', answer: 'Half of a Yellow Sun' },
+        { question: 'Who wrote "The Woman in Cabin 10"?', answer: 'Ruth Ware' },
+        { question: 'What is the title of the book that tells the story of a girl named Celie?', answer: 'The Color Purple' },
+        { question: 'Who is the author of "The Night Circus"?', answer: 'Erin Morgenstern' },
+        { question: 'What is the title of the book that features the character Jonas?', answer: 'The Giver' },
+        { question: 'Who wrote "Circe"?', answer: 'Madeline Miller' },
+        { question: 'What is the title of the book that features a character named Nick Carraway?', answer: 'The Great Gatsby' },
+        { question: 'Who is the author of "The Seven Husbands of Evelyn Hugo"?', answer: 'Taylor Jenkins Reid' },
+        { question: 'What is the name of the protagonist in "The Kite Runner"?', answer: 'Amir' },
+        { question: 'Who wrote "The Outsiders"?', answer: 'S.E. Hinton' },
+        { question: 'What is the title of the book that tells the story of a man named Ove?', answer: 'A Man Called Ove' },
+        { question: 'Who is the author of "Big Little Lies"?', answer: 'Liane Moriarty' },
+        { question: 'What is the title of the book that features the character Elizabeth Bennet?', answer: 'Pride and Prejudice' },
+        { question: 'Who wrote "An Ember in the Ashes"?', answer: 'Sabaa Tahir' },
+        { question: 'What is the title of the book that features a character named Eleanor Oliphant?', answer: 'Eleanor Oliphant Is Completely Fine' },
+        { question: 'Who is the author of "A Discovery of Witches"?', answer: 'Deborah Harkness' },
+        { question: 'What is the title of the book that features the character Gatsby?', answer: 'The Great Gatsby' },
+        { question: 'Who wrote "The Time Traveler\'s Wife"?', answer: 'Audrey Niffenegger' },
+        { question: 'What is the title of the book that features the character Dumbledore?', answer: 'Harry Potter' },
+        { question: 'Who is the author of "The Song of Achilles"?', answer: 'Madeline Miller' },
+        { question: 'What is the title of the book that tells the story of a girl named Meg Murry?', answer: 'A Wrinkle in Time' },
+        { question: 'Who wrote "The Night Circus"?', answer: 'Erin Morgenstern' },
+        { question: 'What is the title of the book that features the character Celie?', answer: 'The Color Purple' },
+        { question: 'Who is the author of "The Lovely Bones"?', answer: 'Alice Sebold' },
+        { question: 'What is the title of the book that features the character Nick Carraway?', answer: 'The Great Gatsby' },
+        { question: 'Who wrote "The Goldfinch"?', answer: 'Donna Tartt' },
+        { question: 'What is the title of the book that tells the story of a girl named Liesel Meminger?', answer: 'The Book Thief' },
+        { question: 'Who is the author of "The Martian"?', answer: 'Andy Weir' },
+        { question: 'What is the name of the protagonist in "The Great Gatsby"?', answer: 'Jay Gatsby' },
+        { question: 'Who wrote "The Great Alone"?', answer: 'Kristin Hannah' },
+        { question: 'What is the title of the book that features the character Katniss Everdeen?', answer: 'The Hunger Games' },
+        { question: 'Who is the author of "Circe"?', answer: 'Madeline Miller' },
+        { question: 'What is the title of the book that features the character Clarisse?', answer: 'Fahrenheit 451' },
+        { question: 'Who wrote "The Secret Life of Bees"?', answer: 'Sue Monk Kidd' },
+        { question: 'What is the title of the book that features the character Hazel Grace Lancaster?', answer: 'The Fault in Our Stars' },
+        { question: 'Who is the author of "The Nightingale"?', answer: 'Kristin Hannah' },
+        { question: 'What is the title of the book that features a character named Augustus Waters?', answer: 'The Fault in Our Stars' },
+        { question: 'Who wrote "Everything I Never Told You"?', answer: 'Celeste Ng' },
+        { question: 'What is the title of the book that tells the story of a man named Ove?', answer: 'A Man Called Ove' },
+        { question: 'Who is the author of "The Light We Lost"?', answer: 'Jill Santopolo' },
+        { question: 'What is the title of the book that features a character named Pip?', answer: 'Great Expectations' },
+        { question: 'Who is the author of "The Kite Runner"?', answer: 'Khaled Hosseini' },
+        { question: 'What is the title of the book that features the character Daisy Buchanan?', answer: 'The Great Gatsby' },
+        { question: 'Who wrote "The Alchemist"?', answer: 'Paulo Coelho' },
+        { question: 'What is the title of the book that features the character Elizabeth Bennet?', answer: 'Pride and Prejudice' },
+        { question: 'Who is the author of "The Great Alone"?', answer: 'Kristin Hannah' },
+        { question: 'What is the title of the book that features the character Charlie?', answer: 'The Perks of Being a Wallflower' },
+        { question: 'Who wrote "The Help"?', answer: 'Kathryn Stockett' },
+        { question: 'In "The Road", what is the main setting?', answer: 'A post-apocalyptic world' },
+        { question: 'What is the name of the character in "The Giver" who receives memories?', answer: 'Jonas' },
+        { question: 'Who wrote "Big Little Lies"?', answer: 'Liane Moriarty' },
+        { question: 'What is the title of the book that features the character Gatsby?', answer: 'The Great Gatsby' },
+        { question: 'Who is the author of "The Night Circus"?', answer: 'Erin Morgenstern' },
+        { question: 'What is the title of the book that features the character Clarisse?', answer: 'Fahrenheit 451' },
+        { question: 'Who wrote "The Kite Runner"?', answer: 'Khaled Hosseini' },
+        { question: 'In "Pride and Prejudice", who is Mr. Darcy?', answer: 'A wealthy gentleman' },
+        { question: 'What is the title of the book that tells the story of a girl named Katniss Everdeen?', answer: 'The Hunger Games' },
+        { question: 'Who is the author of "The Nightingale"?', answer: 'Kristin Hannah' },
+        { question: 'What is the name of the character who speaks to the animals in "Charlotte\'s Web"?', answer: 'Wilbur' },
+        { question: 'Who wrote "The Shadow of the Wind"?', answer: 'Carlos Ruiz Zafón' },
+        { question: 'In "The Book Thief", who is the narrator?', answer: 'Death' },
+        { question: 'What is the title of the book that features the character Liesel Meminger?', answer: 'The Book Thief' },
+        { question: 'Who is the author of "The Martian"?', answer: 'Andy Weir' },
+        { question: 'What is the name of the protagonist in "The Night Circus"?', answer: 'Celia Bowen' },
+        { question: 'In "The Fault in Our Stars", what is the name of Hazel\'s love interest?', answer: 'Augustus Waters' },
+        { question: 'Who wrote "A Man Called Ove"?', answer: 'Fredrik Backman' },
+        { question: 'What is the title of the book that features the character Offred?', answer: 'The Handmaid\'s Tale' },
+        { question: 'Who is the author of "The Alchemist"?', answer: 'Paulo Coelho' },
+        { question: 'What is the title of the book that features the character Charlie?', answer: 'The Perks of Being a Wallflower' },
+        { question: 'Who wrote "Where the Crawdads Sing"?', answer: 'Delia Owens' },
+        { question: 'What is the title of the book that features a character named Holden Caulfield?', answer: 'The Catcher in the Rye' },
+        { question: 'Who is the author of "The Goldfinch"?', answer: 'Donna Tartt' },
+        { question: 'What is the name of the character in "The Road" who is searching for food and safety?', answer: 'The Man' },
+        { question: 'Who wrote "Everything I Never Told You"?', answer: 'Celeste Ng' },
+        { question: 'What is the title of the book that features the character Daisy Buchanan?', answer: 'The Great Gatsby' },
+        { question: 'Who is the author of "The Book Thief"?', answer: 'Markus Zusak' },
+        { question: 'In "The Giver", what is the main theme?', answer: 'The importance of memory and individuality' },
+        { question: 'What is the title of the novel that features a dystopian future and a character named Jonas?', answer: 'The Giver' },
+        { question: 'Who wrote "The Hunger Games" series?', answer: 'Suzanne Collins' },
+        { question: 'What is the title of the book that tells the story of a boy named Pip?', answer: 'Great Expectations' },
+        { question: 'Who is the author of "The Immortalists"?', answer: 'Chloe Benjamin' },
+        { question: 'What is the name of the character in "The Lovely Bones" who is narrating the story?', answer: 'Susie Salmon' },
+        { question: 'Who wrote "The Curious Incident of the Dog in the Night-Time"?', answer: 'Mark Haddon' },
+        { question: 'What is the title of the book that features the character Hazel Grace Lancaster?', answer: 'The Fault in Our Stars' },
+        { question: 'Who is the author of "Little Fires Everywhere"?', answer: 'Celeste Ng' },
+        { question: 'What is the title of the book that features the character Augustus Waters?', answer: 'The Fault in Our Stars' },
+        { question: 'Who wrote "The Light We Lost"?', answer: 'Jill Santopolo' },
+        { question: 'What is the name of the character who falls in love with Gatsby?', answer: 'Daisy Buchanan' },
+        { question: 'Who is the author of "The Song of Achilles"?', answer: 'Madeline Miller' },
+        { question: 'What is the title of the novel by Chimamanda Ngozi Adichie?', answer: 'Half of a Yellow Sun' },
+        { question: 'Who wrote "The Woman in Cabin 10"?', answer: 'Ruth Ware' },
+        { question: 'What is the title of the book that tells the story of a girl named Celie?', answer: 'The Color Purple' },
+        { question: 'Who is the author of "The Night Circus"?', answer: 'Erin Morgenstern' },
+        { question: 'What is the title of the book that features the character Jonas?', answer: 'The Giver' },
+        { question: 'Who wrote "Circe"?', answer: 'Madeline Miller' },
+        { question: 'What is the title of the book that features a character named Nick Carraway?', answer: 'The Great Gatsby' },
+        { question: 'Who is the author of "The Seven Husbands of Evelyn Hugo"?', answer: 'Taylor Jenkins Reid' },
+        { question: 'What is the name of the protagonist in "The Kite Runner"?', answer: 'Amir' },
+        { question: 'Who wrote "The Outsiders"?', answer: 'S.E. Hinton' },
+        { question: 'What is the title of the book that tells the story of a man named Ove?', answer: 'A Man Called Ove' },
+        { question: 'Who is the author of "Big Little Lies"?', answer: 'Liane Moriarty' },
+        { question: 'What is the title of the book that features the character Elizabeth Bennet?', answer: 'Pride and Prejudice' },
+        { question: 'Who wrote "An Ember in the Ashes"?', answer: 'Sabaa Tahir' },
+        { question: 'What is the title of the book that features a character named Eleanor Oliphant?', answer: 'Eleanor Oliphant Is Completely Fine' },
+        { question: 'Who is the author of "A Discovery of Witches"?', answer: 'Deborah Harkness' },
+    ];
+
+    let shuffledQuestions = [];
+    let currentQuestion = 0;
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+        }
+    }
+
+    // Initialize quiz
+    function initQuiz() {
+        shuffledQuestions = [...quizData]; // Create a copy of the original data
+        shuffleArray(shuffledQuestions); // Shuffle the questions
+        currentQuestion = Math.floor(Math.random() * shuffledQuestions.length); // Start from a random question
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.innerText = shuffledQuestions[currentQuestion].question;
+        answerContainer.innerText = shuffledQuestions[currentQuestion].answer;
+
+        questionContainer.classList.remove('fadeOut');
+        answerContainer.classList.remove('fadeOut');
+
+        questionContainer.classList.add('fadeIn');
+        answerContainer.classList.add('fadeIn');
+    }
+
+    function nextQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.classList.remove('fadeIn');
+        answerContainer.classList.remove('fadeIn');
+
+        questionContainer.classList.add('fadeOut');
+        answerContainer.classList.add('fadeOut');
+
+        setTimeout(() => {
+            if (shuffledQuestions.length > 1) {
+                // Remove the current question from the array
+                shuffledQuestions.splice(currentQuestion, 1); // Remove used question
+                currentQuestion = Math.floor(Math.random() * shuffledQuestions.length); // Pick new random question
+                showQuestion();
+            } else {
+                questionContainer.innerText = "Thank you for playing!";
+                answerContainer.innerText = "";
+                document.getElementById("next-button").style.display = "none"; // Hide the next button
+            }
+        }, 500);
+    }
+
+    // Start the quiz on page load
+    initQuiz();
+</script>
+
+</body>
+</html>
